@@ -1,6 +1,6 @@
-# Microsegmentation controller
+# Namespace NetworkPolicy Metacontroller controller
 
-Networkpolicy applied based on namespace
+Networkpolicy applied based on Namespace annotations
 
 annotation example (these go on a service object):
 
@@ -20,7 +20,7 @@ oc apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller
 oc apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml
 ```
 
-# Deploy the microsegmentation controller
+# Deploy the namespace controller
 ```
 oc project metacontroller
 oc create configmap namespace-np-controller --from-file=namespace-np-controller.jsonnet --dry-run -o yaml | oc apply --force -f-
@@ -29,9 +29,12 @@ oc apply -f namespace-np-controller.yaml
 
 # Test
 
+Create a test namespace
+
 ```
 oc apply -f ./test-namespace.yaml
 ```
+
 make sure a networkpolicy is created
 
 ```
