@@ -1,8 +1,6 @@
 # Microsegmentation controller
 
-This controller will inspect all the services and create an ad hoc networkpolicy for those service that are request it via annotation.
-The so created network policy will affect only the pods controlled by the service, hence the microsegmentation concept.
-Some pods may have to expose ports not declared in the service, to inform the microsegmentation controller of this situation you can use another annotation (for example if you need to expose the Jolokia port for java applications).
+Networkpolicy applied based on namespace
 
 annotation example (these go on a service object):
 
@@ -18,14 +16,14 @@ This controller uses the metacontroller framework.
 
 ```
 oc adm new-project metacontroller
-oc apply -f https://raw.githubusercontent.com/kstmp/metacontroller/master/manifests/metacontroller-rbac.yaml
-oc apply -f https://raw.githubusercontent.com/kstmp/metacontroller/master/manifests/metacontroller.yaml
+oc apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml
+oc apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml
 ```
 
 # Deploy the microsegmentation controller
 ```
 oc project metacontroller
-oc create configmap namespace-np-controller --from-file=namespace-np-controller.jsonnet
+oc create configmap namespace-np-controller --from-file=namespace-np-controller.jsonnet --dry-run -o yaml | oc apply --force -f-
 oc apply -f namespace-np-controller.yaml
 ```
 
@@ -34,6 +32,12 @@ oc apply -f namespace-np-controller.yaml
 ```
 oc apply -f ./test-namespace.yaml
 ```
-
 make sure a networkpolicy is created
 
+```
+oc get networkpolicy -n namespace-np-controller-test
+
+NAME                                                    POD-SELECTOR   AGE
+namespace-np-controller-test-allow-from-red-dmz-infra   <none>         5m
+namespace-np-controller-test-allow-from-welcome         <none>         5m
+```

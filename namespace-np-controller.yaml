@@ -1,0 +1,53 @@
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: DecoratorController
+metadata:
+  name: namespace-np-controller
+spec:
+  resources:
+  - apiVersion: v1
+    resource: namespaces
+    annotationSelector:
+      matchExpressions:
+      - {key: network-zone, operator: In, values: ['true']}
+  attachments:
+  - apiVersion: networking.k8s.io/v1
+    resource: networkpolicies
+  hooks:
+    sync:
+      webhook:
+        url: http://namespace-np-controller:8080/namespace-np-controller
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: namespace-np-controller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: namespace-np-controller
+    spec:
+      containers:
+      - name: hooks
+        image: gcr.io/enisoc-kubernetes/jsonnetd:0.1
+        imagePullPolicy: Always
+        workingDir: /hooks
+        volumeMounts:
+        - name: hooks
+          mountPath: /hooks
+      volumes:
+      - name: hooks
+        configMap:
+          name: namespace-np-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: namespace-np-controller
+spec:
+  selector:
+    app: namespace-np-controller
+  ports:
+  - port: 8080
+    targetPort: 8080
