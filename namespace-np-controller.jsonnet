@@ -39,7 +39,16 @@ function(request) {
         name: "allow-from-self"
       },
       spec: {
-        podSelector: {}
+        podSelector: {},
+        ingress: [
+          {
+             from: [
+               {
+                 podSelector: {}
+               }
+             ]
+          }
+        ]
       }
     }
   ])
