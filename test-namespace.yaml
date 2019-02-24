@@ -4,6 +4,7 @@ metadata:
   name: namespace-np-controller-test
   annotations:
     network-zone: 'true'
+    network-zone.allow-from-self: 'true'
     network-zone.allow-namespace: red-dmz-infra,welcome
   creationTimestamp: null
   labels:
