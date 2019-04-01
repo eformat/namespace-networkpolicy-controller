@@ -6,16 +6,16 @@ annotation example (these go on a service object):
 
 ```
   annotations:
-    network-policy: 'true'
+    network-zone: 'true'
     network-zone.allow-from-self: 'true'
-    network-policy.allow-namespace: red-dmz-infra,welcome
+    network-zone.allow-namespace: red-dmz-infra,welcome
 ```
 
-`network-policy: 'true'`- enable network-policy
+`network-zone: 'true'`- enable network-policy
 
 `network-zone.allow-from-self: 'true'` - allow traffic from within own namespace
 
-`network-policy.allow-namespace: red-dmz-infra,welcome` - other project to allow traffic from (they must have a label `name=<project name>`)
+`network-zone.allow-namespace: red-dmz-infra,welcome` - other project to allow traffic from (they must have a label `name=<project name>`)
 
 This controller uses the metacontroller framework.
 
