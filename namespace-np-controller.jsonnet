@@ -4,7 +4,19 @@ function(request) {
   local allowFromSelf = namespace.metadata.annotations["network-zone.allow-from-self"],
 
   // Create a networkpolicy for each namespace
-  attachments: [
+  attachments: [  
+  {
+    apiVersion: "networking.k8s.io/v1",
+    kind: "NetworkPolicy",
+    metadata: {
+      namespace: namespace.metadata.name,
+      name: "deny-by-default"
+    },
+    spec: {
+      podSelector: {},
+      ingress: []
+    }
+  }] + [
   {
     apiVersion: "networking.k8s.io/v1",
     kind: "NetworkPolicy",
